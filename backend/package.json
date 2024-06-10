@@ -1,9 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "devDependencies": {
-    "prettier": "^2.0.0"
-  },
   "main": "index.js",
   "scripts": {
     "test": "vitest run --coverage",
@@ -17,6 +14,7 @@
     "mongoose": "^8.2.3"
   },
   "devDependencies": {
+    "prettier": "^2.0.0",
     "@types/node": "^20.11.30",
     "@vitest/coverage-v8": "^1.4.0",
     "axios-mock-adapter": "^1.22.0",
