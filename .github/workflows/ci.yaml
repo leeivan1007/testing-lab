@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+      - 'bugfix/*'
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Copy environment variables
+        run: |
+          cd backend
+          cp .env.sample .env
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          npm run test -- --coverage --coverageReporters=lcov
+        env:
+          MONGO_URI: mongodb://localhost:27017
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-coverage-report
+          path: backend/coverage/lcov-report
+
+  test-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Run Cypress tests
+        run: |
+          cd frontend
+          npm run cy:test -- --coverage --coverageReporters=lcov
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/lcov-report
+
+  format-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Prettier
+        run: npm install prettier
+
+      - name: Run Prettier
+        run: |
+          npx prettier --write .
+        id: prettier
+
+      - name: Check for formatting changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git diff --exit-code || git commit -am "Format code with Prettier" && git push
+        id: git_diff
+
