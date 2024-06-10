@@ -1,0 +1,31 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Kubernetes tools
+      run: |
+        mkdir -p $HOME/.kube
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
+
+    - name: Copy kube config
+      run: cp k8s/kube_config $HOME/.kube/config
+
+    - name: Apply Kubernetes manifests
+      working-directory: k8s
+      run: |
+        kubectl apply -f deploys.yaml
+        kubectl apply -f services.yaml
+        kubectl apply -f ingress.yaml
