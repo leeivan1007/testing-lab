@@ -51,6 +51,12 @@ jobs:
             sleep 2
           done
 
-      - name: Run tests
-        run: npm run test
+      - name: Run tests with coverage
+        run: npm run test -- --coverage
         working-directory: ./backend
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: ./backend/coverage
