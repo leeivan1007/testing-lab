@@ -36,6 +36,9 @@ jobs:
         run: npm install
         working-directory: ./backend
 
+      - name: Install mocha globally
+        run: npm install -g mocha
+
       - name: Copy environment variables
         run: cp .env.sample .env
         working-directory: ./backend
