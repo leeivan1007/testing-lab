@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run --coverage"
+  "test": "mocha --reporter spec",
+  "coverage": "nyc npm test",
+  "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",

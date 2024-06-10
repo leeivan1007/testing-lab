@@ -51,12 +51,29 @@ jobs:
             sleep 2
           done
 
-      - name: Run tests with coverage
-        run: npm run test --coverage
+      - name: Run tests
+        run: npm run test
+        working-directory: ./backend
+
+      - name: Generate coverage report
+        run: npm run coverage
         working-directory: ./backend
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-report
           path: ./backend/coverage
+
+      - name: Format code
+        run: npm run format
+        working-directory: ./backend
+
+      - name: Commit formatted code
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Format code with formatter"
+          git push
+        if: success()
