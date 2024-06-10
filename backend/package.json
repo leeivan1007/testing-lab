@@ -1,7 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "devDependencies": {
+    "prettier": "^2.0.0"
+  },
   "main": "index.js",
   "scripts": {
     "test": "vitest run --coverage",
