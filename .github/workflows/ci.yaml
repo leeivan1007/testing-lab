@@ -18,7 +18,7 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "echo 'db.runCommand({ping: 1})' | mongosh" 
+          --health-cmd "echo 'db.runCommand({ ping: 1 })' | mongosh" 
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -36,9 +36,6 @@ jobs:
         run: npm install
         working-directory: ./backend
 
-      - name: Install mocha globally
-        run: npm install -g mocha
-
       - name: Copy environment variables
         run: cp .env.sample .env
         working-directory: ./backend
@@ -54,12 +51,8 @@ jobs:
             sleep 2
           done
 
-      - name: Run tests
+      - name: Run tests and generate coverage report
         run: npm run test
-        working-directory: ./backend
-
-      - name: Generate coverage report
-        run: npm run coverage
         working-directory: ./backend
 
       - name: Upload coverage report
