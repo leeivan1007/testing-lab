@@ -38,7 +38,7 @@ npm run test
 
 React (by vite)
 
-### Development
+### Development run
 
 Install dependencies
 ```
@@ -59,3 +59,4 @@ http://localhost:5173
 ```
 npm run cy:test
 ```
+
